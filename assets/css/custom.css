@@ -1,0 +1,30 @@
+
+/* pagination styles */
+        .cust-paginate{
+            text-align: center;    
+            background: #eee;
+            padding: 2rem 0.5rem;
+        }
+        .cust-page-numbers {
+            display: inline-block;
+            padding: 10px 15px;
+            margin: 0 2px 0 0;
+            border: 1px solid #eee;
+            line-height: 1;
+            text-decoration: none;
+            border-radius: 2px;
+            font-weight: 600;
+
+        }
+        .cust-page-numbers.current,
+        a.cust-page-numbers:hover {
+            color: #fff;
+            display: inline-block;
+            background-color: #00b9eb;
+        }
+        .cust-paginate a.cust-page-numbers{
+            box-shadow: none;
+            border: 1px solid;
+        }
+
+/* !pagination styles */

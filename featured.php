@@ -15,6 +15,19 @@
   */
 
 
+
+/* adding styles*/
+
+  function load_featured_styles(){
+    $featured_dir = plugin_dir_url( __FILE__ );
+    wp_enqueue_style('custom-style', $featured_dir . 'assets/css/custom.css');
+  }
+  add_action('wp_enqueue_scripts', 'load_featured_styles');
+
+/* !adding styles*/
+
+
+
 /* add checkbox */ 
 
 function setup_featured_checkbox()
@@ -86,7 +99,7 @@ function featured_shortcode(){
       
       $next_page_count = $paged + 1;
       $prev_count = $paged - 1;
-      
+      // echo $paged;
       $args = array(
         'posts_per_page' => 1,
         'order' => 'desc',
@@ -112,20 +125,28 @@ function featured_shortcode(){
             
         <?php } ?>
 
-      <div style="background: #eee;padding: 1rem;">
-        
-       <?php if($prev_count != 0 ) { ?>
+        <!-- pagination -->
+        <nav class="cust-paginate">
+        <?php if($prev_count != 0 ) { ?>
 
-            <nav style="float:left"><a href="<?php echo $finalurl.$prev_count; ?>" name="next_post">< Prev Post</a></nav>
+          <a class="cust-page-numbers" href="<?php echo $finalurl.$prev_count; ?>" name="next_post" title="Previous Post"> &laquo; </a>
 
-            <?php } if($featured->max_num_pages >= $next_page_count ){ ?>
+          <?php }
 
-            <nav style="float:right"><a href="<?php echo $finalurl.$next_page_count; ?>" name="next_post">Next Post ></a></nav>
+          for ($i=1; $i < $featured->max_num_pages + 1; $i++) { 
+            echo '<a href="'.$finalurl.$i.'" class="cust-page-numbers '.(($i == $paged) ? 'current' : '') .'">' .$i. '</a>';
+          } 
+          
+          if($featured->max_num_pages >= $next_page_count ){ ?>
+
+            <a class="cust-page-numbers" href="<?php echo $finalurl.$next_page_count; ?>" name="next_post" title="Next Post"> &raquo; </a>
       
-        <?php }     ?>
-              <div style="clear:both">
-      </div>
+        <?php }
+          ?>
+        </nav>
 
+        <!-- !pagnation -->
+      
 <?php
     }
     
