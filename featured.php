@@ -78,15 +78,15 @@ function featured_shortcode(){
         $not_first = $not_first.'/page/';
       }
       ($not_first) ? $finalurl = $not_first : $finalurl = $in_first ;
-      // echo $finalurl;
+      
 
        /* getting url for pagination */ 
 
        $paged = ( get_query_var( 'paged' ) ) ? get_query_var( 'paged' ) : 1;
-      // echo $paged;
+      
       $next_page_count = $paged + 1;
       $prev_count = $paged - 1;
-      // echo $prev_count;
+      
       $args = array(
         'posts_per_page' => 1,
         'order' => 'desc',
