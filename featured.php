@@ -16,8 +16,8 @@
 
 
 
+ 
 /* adding styles*/
-
   function load_featured_styles(){
     $featured_dir = plugin_dir_url( __FILE__ );
     wp_enqueue_style('custom-style', $featured_dir . 'assets/css/custom.css');
@@ -25,6 +25,13 @@
   add_action('wp_enqueue_scripts', 'load_featured_styles');
 
 /* !adding styles*/
+function load_featured_scripts(){
+  $featured_dir = plugin_dir_url( __FILE__ );  
+  wp_enqueue_script('custom-script', $featured_dir . 'assets/js/custom.js');
+}
+add_action('wp_enqueue_scripts', 'load_featured_scripts');
+
+
 
 
 
@@ -101,14 +108,14 @@ function featured_shortcode(){
       $prev_count = $paged - 1;
       // echo $paged;
       $args = array(
-        'posts_per_page' => 1,
+        'posts_per_page' => 2,
         'order' => 'desc',
         'meta_key' => 'featured-checkbox',
         'meta_value' => 'yes',
         'paged'        => $paged
     );
     $featured = new WP_Query($args);
-
+    
     // print_r($featured);
     
     if ($featured->have_posts()) { 
@@ -123,43 +130,57 @@ function featured_shortcode(){
       
             <p ><?php the_excerpt();?></p>
             
-        <?php } ?>
-
-        <!-- pagination -->
-        <nav class="cust-paginate">
-        <?php if($prev_count != 0 ) { ?>
-          <a class="cust-page-numbers" href="<?php echo $finalurl.'0'; ?>" title="First Post"> |< </a>
-          <a class="cust-page-numbers" href="<?php echo $finalurl.$prev_count; ?>" title="Previous Post"> < </a>
-
-          <?php }
-          $total_count = $featured->max_num_pages;
-          $start = 0;
-          $start = $paged - 2;
-              $end = $paged + 2;
-          if( $paged == $total_count || $start > 1 ){echo '<span class="dots">...</span>' ;}
-            for ($i=1; $i < $featured->max_num_pages + 1; $i++) {
-                         
-              if($i >= $start && $end >= $i) {
-                echo '<a href="'.$finalurl.$i.'" class="cust-page-numbers '.(($i == $paged) ? 'current' : '') .'" title="Post '.$i.'">' .$i. '</a>';
-              } 
-        } 
-        if($paged <=  $total_count - 3){echo '<span class="dots">...</span>' ;}
-          
-          if($featured->max_num_pages >= $next_page_count ){ ?>
-
-            <a class="cust-page-numbers" href="<?php echo $finalurl.$next_page_count; ?>" title="Next Post"> > </a>
-            <a class="cust-page-numbers" href="<?php echo $finalurl.$featured->max_num_pages; ?>" title="Last Post"> >| </a>
-      
-        <?php }
-          ?>
-        </nav>
-
-        <!-- !pagnation -->
-      
-<?php
+        <?php } 
     }
     
   }
+
+  ?>
+   <!-- pagination -->
+   <nav class="cust-paginate">
+       
+       <?php if($prev_count != 0 ) { ?>
+         
+         <a class="cust-page-numbers" href="<?php echo $finalurl.$prev_count; ?>" title="Previous Post"> < </a>
+         <?php 
+         if($paged == $total_count || $start > 1) {  ?>
+         <a class="cust-page-numbers" href="<?php echo $finalurl.'0'; ?>" title="First Post"> 1 </a>
+         <?php
+          }
+         }
+         $total_count = $featured->max_num_pages;
+         $start = 0;
+         $start = $paged - 1;
+             $end = $paged + 1;
+         if( $paged == $total_count || $start > 1 ){echo '<a class="cust-page-numbers" href="'.$finalurl.'0'.'" title="First Post"> 1 </a><span class="dots">...</span>' ;}
+           for ($i=1; $i < $featured->max_num_pages + 1; $i++) {
+                        
+             if($i >= $start && $end >= $i) {
+               echo '<a href="'.$finalurl.$i.'" class="cust-page-numbers '.(($i == $paged) ? 'current' : '') .'" title="Post '.$i.'">' .$i. '</a>';
+             } 
+       } 
+       $showLast =false;
+       if($paged <=  $total_count - 2){echo '<span class="dots">...</span>';  $showLast=true;}
+         
+         if($featured->max_num_pages >= $next_page_count ){ 
+           
+           if($showLast){ ?>
+           <a class="cust-page-numbers" href="<?php echo $finalurl.$featured->max_num_pages; ?>" title="Last Post"> <?php echo $total_count; ?> </a>
+           <?php }?>
+           <a class="cust-page-numbers" href="<?php echo $finalurl.$next_page_count; ?>" title="Next Post"> > </a>
+           
+     
+       <?php }
+         ?>
+         <label for="jumpTo" class="lblJump"> Jump to Page:
+         <input id="jumpTo" type="number" min="1" max="<?php echo $total_count; ?>" value="<?php echo $paged ?>" class="jump-text" onchange="myFunction()
+          ">
+          </label>
+          <input type="hidden" value="<?php echo $finalurl; ?>" id="hiddenTxt">
+       </nav>
+
+       <!-- !pagnation -->
+  <?php
   
 }
 

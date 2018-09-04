@@ -3,11 +3,11 @@
         .cust-paginate{
             text-align: center;    
             background: #eee;
-            padding: 2rem 0.5rem;
+            padding: 1rem 0.5rem;
         }
         .cust-page-numbers, .cust-paginate span.dots {
             display: inline-block;
-            padding: 10px 15px;
+            padding: 7px 10px;
             margin: 0 2px 0 0;
             border: 1px solid #eee;
             line-height: 1;
@@ -17,7 +17,7 @@
 
         }
         .cust-page-numbers.current,
-        a.cust-page-numbers:hover {
+        .cust-paginate a.cust-page-numbers:hover {
             color: #fff;
             display: inline-block;
             background-color: #00b9eb;
@@ -26,8 +26,16 @@
             box-shadow: none;
             border: 1px solid;
         }
-        .cust-paginate span.dots{
-            /* border-color:#010101; */
+        .choose-show{
+            height:33px;
+        }
+        .cust-paginate .jump-text{
+            width: 80px;
+            height: 33px;
+            display: inline-block;
+        }
+        .cust-paginate .lblJump{
+            margin-top: 15px;
         }
 
 /* !pagination styles */
