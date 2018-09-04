@@ -5,7 +5,7 @@
             background: #eee;
             padding: 2rem 0.5rem;
         }
-        .cust-page-numbers {
+        .cust-page-numbers, .cust-paginate span.dots {
             display: inline-block;
             padding: 10px 15px;
             margin: 0 2px 0 0;
@@ -25,6 +25,9 @@
         .cust-paginate a.cust-page-numbers{
             box-shadow: none;
             border: 1px solid;
+        }
+        .cust-paginate span.dots{
+            /* border-color:#010101; */
         }
 
 /* !pagination styles */

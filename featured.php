@@ -7,7 +7,7 @@
   Description: this is a simple featured plugin
   Author: samad
   Author URI: www.27technologies.com/samad
-  Text Domain: Simple Featured Post
+  Text Domain: featured
   Version: 1.0.0
   License: GPL-3.0
   License URI: https://opensource.org/licenses/GPL-3.0 
@@ -128,18 +128,27 @@ function featured_shortcode(){
         <!-- pagination -->
         <nav class="cust-paginate">
         <?php if($prev_count != 0 ) { ?>
-
-          <a class="cust-page-numbers" href="<?php echo $finalurl.$prev_count; ?>" name="next_post" title="Previous Post"> &laquo; </a>
+          <a class="cust-page-numbers" href="<?php echo $finalurl.'0'; ?>" title="First Post"> |< </a>
+          <a class="cust-page-numbers" href="<?php echo $finalurl.$prev_count; ?>" title="Previous Post"> < </a>
 
           <?php }
-
-          for ($i=1; $i < $featured->max_num_pages + 1; $i++) { 
-            echo '<a href="'.$finalurl.$i.'" class="cust-page-numbers '.(($i == $paged) ? 'current' : '') .'">' .$i. '</a>';
-          } 
+          $total_count = $featured->max_num_pages;
+          $start = 0;
+          $start = $paged - 2;
+              $end = $paged + 2;
+          if( $paged == $total_count || $start > 1 ){echo '<span class="dots">...</span>' ;}
+            for ($i=1; $i < $featured->max_num_pages + 1; $i++) {
+                         
+              if($i >= $start && $end >= $i) {
+                echo '<a href="'.$finalurl.$i.'" class="cust-page-numbers '.(($i == $paged) ? 'current' : '') .'" title="Post '.$i.'">' .$i. '</a>';
+              } 
+        } 
+        if($paged <=  $total_count - 3){echo '<span class="dots">...</span>' ;}
           
           if($featured->max_num_pages >= $next_page_count ){ ?>
 
-            <a class="cust-page-numbers" href="<?php echo $finalurl.$next_page_count; ?>" name="next_post" title="Next Post"> &raquo; </a>
+            <a class="cust-page-numbers" href="<?php echo $finalurl.$next_page_count; ?>" title="Next Post"> > </a>
+            <a class="cust-page-numbers" href="<?php echo $finalurl.$featured->max_num_pages; ?>" title="Last Post"> >| </a>
       
         <?php }
           ?>
