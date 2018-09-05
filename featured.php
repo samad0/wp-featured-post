@@ -128,9 +128,9 @@ function featured_shortcode(){
       
            <a href="<?php the_permalink(); ?>"><?php the_post_thumbnail(); ?></a> 
       
-            <p ><?php the_excerpt();?></p>
+            <p><?php the_excerpt();?></p>
             
-        <?php } 
+        <?php }
     }
     
   }
@@ -172,8 +172,19 @@ function featured_shortcode(){
      
        <?php }
          ?>
+
+          <label for="showPage" class="lblJump"> Show:
+            <select id="showPage" onchange="changePageShow()">
+              <?php for($j = 1; $j < 5; $j++)
+              {
+               echo "<option value=".$j.">$j</option>";
+              } ?>
+              <!-- <option></option> -->
+            </select>
+          </label>
+
          <label for="jumpTo" class="lblJump"> Jump to Page:
-         <input id="jumpTo" type="number" min="1" max="<?php echo $total_count; ?>" value="<?php echo $paged ?>" class="jump-text" onchange="myFunction()
+         <input id="jumpTo" type="number" min="1" max="<?php echo $total_count; ?>" value="<?php echo $paged ?>" class="jump-text" onchange="jumpToPage()
           ">
           </label>
           <input type="hidden" value="<?php echo $finalurl; ?>" id="hiddenTxt">
@@ -188,3 +199,12 @@ add_shortcode('featured-post', 'featured_shortcode');
 
 
 /* ! display in frontend */
+
+
+function change_post_per_page( $query ) {
+  
+  if ( $query->is_home()) {
+      $query->set( 'posts_per_page', 3 );
+  }
+}
+add_action( 'pre_get_posts', 'change_post_per_page' );
