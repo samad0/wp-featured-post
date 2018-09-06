@@ -14,7 +14,7 @@
  
   */
 
-
+ defined('ABSPATH') or die();
 
  
 /* adding styles*/
