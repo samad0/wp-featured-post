@@ -4,7 +4,7 @@
 
   Plugin Name: Simple featured posts
   Plugin URI: www.27technologies.com
-  Description: this is a simple featured plugin to show featured posts using the shortcode [featured-post type="post-type"]
+  Description: Simple featured posts is a simple featured plugin to show featured posts using the shortcode [featured-post type="post-type"]
   Author: samad
   Author URI: www.27technologies.com/samad
   Text Domain: featured
@@ -19,8 +19,11 @@
  
 /* adding styles*/
   function load_featured_styles(){
+
     $featured_dir = plugin_dir_url( __FILE__ );
     wp_enqueue_style('custom-style', $featured_dir . 'assets/css/custom.css');
+    // wp_enqueue_style('admin-style', $featured_dir . 'admin/assets/css/admin.css');
+  
   }
   add_action('wp_enqueue_scripts', 'load_featured_styles');
 
@@ -97,11 +100,16 @@ add_action( 'save_post', 'save_featured_checkbox' );
 function featured_shortcode( $arg_post_type ){
        /* getting url for pagination */ 
 
+       $selected_option = get_option( 'choosen_post_type' );
+
+      //  print_r($selected_option);
+      //  die();
+
         if(!$arg_post_type || $arg_post_type['type'] == ''){ 
           $arg_post_type = ['type' => 'post'];
           // print_r($arg_post_type);
       }
-       $arg_post_type_value = shortcode_atts( ['type' => 'post'],
+       $arg_post_type_value = shortcode_atts( ['type' => $selected_option],
                                               $arg_post_type,
                                               'featured-post'
                                             );
@@ -149,12 +157,13 @@ function featured_shortcode( $arg_post_type ){
       $prev_count = $paged - 1;
       // echo $paged;
       $args = array(
-        'posts_per_page' => 3,
+        'posts_per_page' => 2,
         'order' => 'desc',
         'meta_key' => 'featured-checkbox',
         'meta_value' => 'yes',
         'paged'        => $paged,
-        'post_type' => $arg_post_type_value
+        'post_type' => $selected_option
+        // 'post_type' => array('testimonial', 'post')
     );
     $featured = new WP_Query($args);
     
@@ -236,4 +245,125 @@ add_shortcode('featured-post', 'featured_shortcode');
 /* ! display in frontend */
 
 
+
+/**
+ * *******************************************
+ * ************* admin side ******************
+ * *******************************************
+ */ 
+
+
+ /* admin page */
+ 
+
+add_action( 'admin_menu', 'featured_admin_page_register' );
+
+
+function featured_admin_page_register(){
+
+  add_menu_page('Featured Post', 'Featured Post', 'manage_options', 'featured-post', 'featured_post_render', 'dashicons-format-aside');
+
+}
+
+//register settings
+add_action( 'admin_init', 'register_featured_post_settings' );
+
+function register_featured_post_settings() {
+
+    register_setting( 'featured-post-choose-post-type', 'choosen_post_type' );
+    add_settings_field('clusters', 'Choose Clusters to show:', 'cluster_setting', __FILE__);
+  }
+
+
+function featured_post_render(){
+  global $title;
+  print '<h2>'.$title.' Settings'.'</h2>';
+  $args = array(
+    'public'   => true,
+    '_builtin' => false
+);
+
+// $post_types1 = get_post_type_object( get_post_type($args));
+// echo '<pre>';
+// print_r($post_types1);
+// echo '</pre>';
+$post_types = get_post_types($args);
+// $post_types2 = get_post_type_labels($args);
+// echo $post_types2;
+// foreach ( get_post_type_object(get_post_type($args)) as $post_types ) {
+//   print_r($post_type3);
+// }
+// $post = get_queried_object();
+// $postType = get_post_type_object(get_post_type($args));
+// if ($postType) {
+//     echo esc_html($postType->labels->singular_name);
+// }
+  ?>
+      <form method="post" action="options.php">
+          <?php settings_fields( 'featured-post-choose-post-type' ); ?>
+          <?php do_settings_sections( 'featured-post-choose-post-type' ); ?>
+          <table class="form-table">
+            <tr valign="top">
+      
+            <td>
+                        
+                <p><strong > Choose From available Post Types </strong ></p>
+                <p>
+                    <?php 
+                    $options = get_option( 'choosen_post_type' );
+                    $post_types["post"] = "post";
+                      
+                    $result=array_intersect($post_types,$options);
+                    
+                    foreach ( $post_types as $post_type ) {
+                        $post_type_obj = get_post_type_object( $post_type );  
+                        echo '<label for="choosen_post_type['.$post_type.']" class="chk-box"><input type="checkbox" name="choosen_post_type[]" id="choosen_post_type['.$post_type.']" value="'.$post_type.'" '.(($result[$post_type] == $post_type ) ? 'checked' : 'dd' ).'>'.$post_type_obj->labels->singular_name.'</label>';
+                      }
+                    ?>
+                  </p>
+              </td>
+              </tr>
+          </table>
+      <?php submit_button(); ?>
+      </form>
+  
+  <?php } 
+
+
+
+/* !admin page */
+
+
+/* settings link in plugin   */
+
+add_filter( 'plugin_action_links_' . plugin_basename(__FILE__), 'featured_post_action_links' );
+
+function featured_post_action_links( $links ) {
+   $links[] = '<a href="'. esc_url( get_admin_url(null, 'admin.php?page=featured-post') ) .'">Settings</a>';
+   return $links;
+}
+
+/* settings link in plugin   */
+
+
+/* styles */
+
+function featured_admin_style(){
+
+  $featured_dir = plugin_dir_url( __FILE__ );
+
+  wp_enqueue_style('admin-style', $featured_dir.'admin/assets/css/admin.css');
+
+} 
+
+add_action('admin_enqueue_scripts', 'featured_admin_style');
+
+
+
+
+/**
+ * *******************************************
+ * ************* !admin side ******************
+ * *******************************************
+ */ 
 
