@@ -102,8 +102,6 @@ function featured_shortcode( $arg_post_type ){
 
        $selected_option = get_option( 'choosen_post_type' );
 
-      //  print_r($selected_option);
-      //  die();
 
         if(!$arg_post_type || $arg_post_type['type'] == ''){ 
           $arg_post_type = ['type' => 'post'];
@@ -271,7 +269,6 @@ add_action( 'admin_init', 'register_featured_post_settings' );
 function register_featured_post_settings() {
 
     register_setting( 'featured-post-choose-post-type', 'choosen_post_type' );
-    add_settings_field('clusters', 'Choose Clusters to show:', 'cluster_setting', __FILE__);
   }
 
 
@@ -283,21 +280,8 @@ function featured_post_render(){
     '_builtin' => false
 );
 
-// $post_types1 = get_post_type_object( get_post_type($args));
-// echo '<pre>';
-// print_r($post_types1);
-// echo '</pre>';
+
 $post_types = get_post_types($args);
-// $post_types2 = get_post_type_labels($args);
-// echo $post_types2;
-// foreach ( get_post_type_object(get_post_type($args)) as $post_types ) {
-//   print_r($post_type3);
-// }
-// $post = get_queried_object();
-// $postType = get_post_type_object(get_post_type($args));
-// if ($postType) {
-//     echo esc_html($postType->labels->singular_name);
-// }
   ?>
       <form method="post" action="options.php">
           <?php settings_fields( 'featured-post-choose-post-type' ); ?>
